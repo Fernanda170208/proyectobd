@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}Editar Tarea{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center mb-4">Editando Tarea: "{{ task.nombre }}"</h2>
+                <form method="POST" action="{{ url_for('task.update_task_action', task_id=task.id_tarea) }}">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre de la Tarea:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ task.nombre }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción:</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{ task.descripcion }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="id_categoria" class="form-label">Categoría:</label>
+                            <select class="form-select" id="id_categoria" name="id_categoria">
+                                <option value="1" {% if task.id_categoria == 1 %}selected{% endif %}>Trabajo</option>
+                                <option value="2" {% if task.id_categoria == 2 %}selected{% endif %}>Estudio</option>
+                                <option value="3" {% if task.id_categoria == 3 %}selected{% endif %}>Personal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="id_prioridad" class="form-label">Prioridad:</label>
+                            <select class="form-select" id="id_prioridad" name="id_prioridad">
+                                <option value="3" {% if task.id_prioridad == 3 %}selected{% endif %}>Alta</option>
+                                <option value="2" {% if task.id_prioridad == 2 %}selected{% endif %}>Media</option>
+                                <option value="1" {% if task.id_prioridad == 1 %}selected{% endif %}>Baja</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="id_estado" class="form-label">Estado:</label>
+                            <select class="form-select" id="id_estado" name="id_estado">
+                                <option value="1" {% if task.id_estado == 1 %}selected{% endif %}>Pendiente</option>
+                                <option value="2" {% if task.id_estado == 2 %}selected{% endif %}>En Proceso</option>
+                                <option value="3" {% if task.id_estado == 3 %}selected{% endif %}>Completada</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{{ url_for('task.dashboard') }}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

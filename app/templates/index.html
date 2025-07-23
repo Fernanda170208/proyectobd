@@ -1,0 +1,66 @@
+<!-- app/templates/index.html -->
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="task-form-container">
+    <h2>Añadir Nueva Tarea</h2>
+    <form action="{{ url_for('task_bp.add') }}" method="POST" class="task-form">
+        <div class="form-group">
+            <label for="nombre">Nombre de la Tarea:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej: Estudiar para el examen" required>
+        </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" placeholder="Ej: Repasar los capítulos 3 y 4"></textarea>
+        </div>
+        <div class="form-group-inline">
+            <div class="form-group">
+                <label for="id_categoria">Categoría:</label>
+                <select id="id_categoria" name="id_categoria">
+                    <option value="1">Trabajo</option>
+                    <option value="2">Estudio</option>
+                    <option value="3">Personal</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_prioridad">Prioridad:</label>
+                <select id="id_prioridad" name="id_prioridad">
+                    <option value="3">Alta</option>
+                    <option value="2">Media</option>
+                    <option value="1">Baja</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Añadir Tarea</button>
+    </form>
+</section>
+
+<section class="task-list-container">
+    <h2>Mis Tareas</h2>
+    <div class="task-list">
+        {% if tasks %}
+            {% for task in tasks %}
+            <div class="task-card priority-{{ task.prioridad | lower }}">
+                <div class="task-card-header">
+                    <h3>{{ task.nombre }}</h3>
+                    <span class="task-status">{{ task.estado }}</span>
+                </div>
+                <div class="task-card-body">
+                    <p>{{ task.descripcion }}</p>
+                </div>
+                <div class="task-card-footer">
+                    <span class="tag category">{{ task.categoria }}</span>
+                    <span class="tag priority">{{ task.prioridad }}</span>
+                    <!-- El botón de eliminar es un pequeño formulario -->
+                    <form action="{{ url_for('task_bp.delete', task_id=task.id_tarea) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta tarea?');">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>¡Felicidades! No tienes tareas pendientes.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
