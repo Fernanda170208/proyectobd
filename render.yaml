@@ -3,19 +3,19 @@
 # Definimos los servicios que necesitamos: una base de datos y una aplicación web.
 services:
   # --- Servicio 1: La Base de Datos PostgreSQL ---
-  - type: postgres      # <-- ¡CORREGIDO! El tipo correcto es 'postgres', no 'psql'.
-    name: taskmaster-db   # Nombre que le daremos a la base de datos
-    region: frankfurt   # ¡IMPORTANTE! Elige tu región (ej: ohio para US, frankfurt para EU)
-    plan: free          # Usamos el plan gratuito
+  - type: psql         # <-- ¡CORREGIDO DE VUELTA! El tipo correcto es 'psql'. Mis disculpas.
+    name: taskmaster-db  # Nombre que le daremos a la base de datos
+    region: frankfurt  # ¡IMPORTANTE! Elige tu región (ej: ohio para US, frankfurt para EU)
+    plan: free         # Usamos el plan gratuito
     postgresMajorVersion: 14 # Versión de PostgreSQL
-    ipAllowList: []     # Permite conexiones desde cualquier IP
+    ipAllowList: []    # Permite conexiones desde cualquier IP
 
   # --- Servicio 2: La Aplicación Web Python/Flask ---
-  - type: web           # Tipo de servicio: Web Service
-    name: taskmaster-app  # Nombre que le daremos a la aplicación web
-    region: frankfurt   # ¡CRÍTICO! Debe ser la MISMA región que la base de datos
-    plan: free          # Usamos el plan gratuito
-    runtime: python     # Entorno de ejecución
+  - type: web          # Tipo de servicio: Web Service
+    name: taskmaster-app # Nombre que le daremos a la aplicación web
+    region: frankfurt  # ¡CRÍTICO! Debe ser la MISMA región que la base de datos
+    plan: free         # Usamos el plan gratuito
+    runtime: python    # Entorno de ejecución
     
     # Comandos para construir y ejecutar la aplicación
     buildCommand: "pip install -r requirements.txt"
@@ -25,7 +25,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: taskmaster-db    # El mismo nombre que definimos para el servicio postgres
+          name: taskmaster-db    # El mismo nombre que definimos para el servicio psql
           property: connectionString
           
       - key: SECRET_KEY
