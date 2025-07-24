@@ -1,0 +1,35 @@
+# render.yaml - El plano maestro para desplegar en Render
+
+# Definimos los servicios que necesitamos: una base de datos y una aplicación web.
+services:
+  # --- Servicio 1: La Base de Datos PostgreSQL ---
+  - type: psql         # Tipo de servicio: PostgreSQL
+    name: taskmaster-db  # Nombre que le daremos a la base de datos
+    region: frankfurt  # ¡IMPORTANTE! Elige tu región (ej: ohio para US, frankfurt para EU)
+    plan: free         # Usamos el plan gratuito
+    postgresMajorVersion: 14 # Versión de PostgreSQL
+    ipAllowList: []    # Permite conexiones desde cualquier IP (necesario para conectar con pgAdmin4)
+
+  # --- Servicio 2: La Aplicación Web Python/Flask ---
+  - type: web          # Tipo de servicio: Web Service
+    name: taskmaster-app # Nombre que le daremos a la aplicación web
+    region: frankfurt  # ¡CRÍTICO! Debe ser la MISMA región que la base de datos
+    plan: free         # Usamos el plan gratuito
+    runtime: python    # Entorno de ejecución
+    
+    # Comandos para construir y ejecutar la aplicación
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn run:app"
+    
+    # Variables de Entorno (¡la magia ocurre aquí!)
+    envVars:
+      # Render automáticamente toma la URL de la base de datos creada arriba
+      # y la inyecta aquí. Nuestro código en Python ya sabe cómo leer esto.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: taskmaster-db    # El mismo nombre que definimos para el servicio psql
+          property: connectionString
+          
+      # Clave secreta para la aplicación Flask
+      - key: SECRET_KEY
+        generateValue: true # Render generará una clave aleatoria y segura por nosotros
